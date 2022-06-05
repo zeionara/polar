@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		<title>Dexubize Polar</title>
+    	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="slider.js"></script>
+    	<!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>!-->
+        <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    	<script type="text/javascript">
+        	$(document).ready(function(){
+        		$('div.counter_ps').hide();
+        		var qscol;
+        		var anscol;
+        		var s1;
+        		var s2;
+        		var quests = [];
+        		var questsnum = [];
+        		var answnum = [];
+                var ops=['⊕','&','|','≡','→'];
+        		var arrcolor=['pblue','pviolet','pgreen','porange','pred'];
+        		var arrcolorlog=['blue','violet','green','orange','red'];
+        		var arrcolordef=['#33B5E5','#AA66CC','#99CC00','#FFBB33','#FF4444'];
+        		var arrcolordefload=['#8AD5F0','#D6ADEB','#C5E26D','#FFD980','#FF9494'];
+        		var numlvl = 0;
+        		var DPLH=$(document).height()/15;
+        		var DPLW=$(document).width()/15;
+                var herty=(DPLW*15-DPLH*15)/2;
+        		generatecolor();
+        		$('div.ps').css('height',DPLH.toString());
+        		$("input.answer, input#valper").css('font-size',(DPLH/2).toString()+"px");
+                $('input#bigvalh').css('font-size',(DPLH).toString()+"px");
+        		$("div.loader").css('height',(parseInt($("input.answer").css('height').substr(0,$("input.answer").css('height').length-2))+6).toString()+'px');
+                $("input.answer, input#valper, input#bigvalh").css('width',(DPLH/2*15).toString()+"px");
+        		$("div.loader").css('width',(DPLH/2*15+11).toString()+"px");
+        		$("input.answer, div.loader, input#valper, input#bigvalh")
+                .css("left",((DPLW*15-DPLH/2*15)/2).toString()+'px').css("top",DPLH.toString()*8+'px');
+                $(' input#valper').css("top",DPLH.toString()*2+'px');
+                $(' input#bigvalh').css("top",DPLH.toString()*12+'px');
+                
+                $('input.answercc').css('width',DPLW*4+'px').css('font-size',DPLH/2+'px');
+                $('div.contcc').css('left',(((DPLW*15-DPLH*5)/4)+DPLH*6).toString()+'px');
+                    
+                $("div.greener_loader, div.reder_loader, div.blueer_loader").css('left',(((DPLW*15-DPLH*5)/4)+DPLH*6).toString()+'px').css('top',(DPLH*10-(parseInt($("input.answercc").css('height').substr(0,$("input.answercc").css('height').length-2)))).toString()+'px');
+        		$("div.ready, div.loader, input.answer").hide();
+                $('input#valper, input#bigvalh').val('1').hide();
+                //input end
+                var kprev=0;
+                //var vald=0;
+                //var plvs=0;
+                //var plvss=0;
+                function getbb(){
+                    $('div.bval, div.ender, div.bler, div.blockerpp').show();
+                    var sbvalvaled='';
+                    var sevalvaled='';
+                    var sbvalval='';
+                    var sevalval='';
+                    var china='';
+                    var tssl=[];
+                    var tssr=[];
+                    var tss=['div.blockerpp.first','div.blockerpp.second','div.blockerpp.third','div.blockerpp.fourth'];
+                    var ts = [];
+                    var bool=true;
+                    for (i=0; i<5; i++){
+                        bool=true;
+                        while (bool) {
+                            ts[i]=Math.round(Math.random( )*4);
+                            bool=false;
+                            for (j=0;j<i;j++){
+                                if (ts[j]==ts[i]) bool=true;
+                            };
+                        };
+                        console.log(ts[i]);
+                    };
+                    var de1=0;
+                    var de2=0;
+                    var bvalval=0;
+                    var evalval=0;
+                    var de1s='';
+                    var de3s='';
+                    $('div.blockerpp.first div.operta').text(ops[ts[4]]);
+                    $('div.blockerpp.second div.operta').text(ops[ts[0]]);
+                    $('div.blockerpp.third div.operta').text(ops[ts[1]]);
+                    $('div.blockerpp.fourth div.operta').text(ops[ts[2]]);
+                    for (i=0;i<4;i++){
+                        de1=Math.round(Math.random()).toString();
+                        de2=Math.round(Math.random()).toString();
+                        bvalval=bvalval+de1*Math.pow(2,3-i);
+                        de1s=de1s+de1.toString();
+                        if ($(tss[i]+' div.operta').text()==ops[0]){
+                                if (((de1=='0') && (de2=='0'))||((de1=='1') && (de2=='1'))){
+                                    de3s=de3s+'0';  
+                                } else {
+                                    evalval=evalval+Math.pow(2,3-i);
+                                    de3s=de3s+'1';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[1]){
+                                if ((de1=='1') && (de2=='1')){
+                                    evalval=evalval+Math.pow(2,3-i);
+                                    de3s=de3s+'1';
+                                } else {
+                                    de3s=de3s+'0';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[2]){
+                                if ((de1=='0') && (de2=='0')){
+                                    de3s=de3s+'0';
+                                } else {
+                                    evalval=evalval+Math.pow(2,3-i);
+                                    de3s=de3s+'1';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[4]){
+                                if ((de1=='1') && (de2=='0')){
+                                    de3s=de3s+'0';
+                                } else {
+                                    evalval=evalval+Math.pow(2,3-i);
+                                    de3s=de3s+'1';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[3]){
+                                if (((de1=='0') && (de2=='0'))||((de1=='1') && (de2=='1'))){
+                                    evalval=evalval+Math.pow(2,3-i);
+                                    de3s=de3s+'1';
+                                } else {
+                                    de3s=de3s+'0';
+                                };
+                            };
+                    };
+                    $('div.bval').text(bvalval).css('font-size',DPLH*2+'px').css('left',
+                    ((DPLW*15-DPLH*9)/2-parseInt($("div.bval").css('width').substr(0,$("div.bval").css('width').length-2)))/2+'px')
+                    .css('top',(DPLH*15-parseInt($("div.bval").css('height').substr(0,$("div.bval").css('height').length-2)))/2+'px');
+                    $('div.ender').text(evalval).css('left',
+                    (DPLW*15-DPLH*9)/2+DPLH*9+(((DPLW*15-DPLH*9)/2-parseInt($("div.ender").css('width').substr(0,$("div.ender")
+                        .css('width').length-2)))/2)+'px');
+                    $('.gblr').bind('click',function(){
+                        $('.gblr').unbind('click');
+                        china='';
+                        for (i=0;i<4;i++){
+                            //console.log($(tss[i]+' div.rightpr'));
+                            if ($(tss[i]+' div.rightpr').attr('class')=='rightpr aeopsr highlight-r'){
+                                //$(this).css('background-image','url(lrpps/rpp'+arrcolorlog[s2]+'.png)');
+                                tssr[i]='1';
+                            } else {
+                                tssr[i]='0';
+                            };
+                            if ($(tss[i]+' div.leftpr').attr('class')=='leftpr aeopsl highlight'){
+                                //$(this).css('background-image','url(lrpps/rpp'+arrcolorlog[s2]+'.png)');
+                                tssl[i]='1';
+                            } else {
+                                tssl[i]='0';
+                            };
+                            if ($(tss[i]+' div.operta').text()==ops[0]){
+                                if (((tssl[i]=='0') && (tssr[i]=='0'))||((tssl[i]=='1') && (tssr[i]=='1'))){
+                                    china=china+'0';
+                                } else {
+                                    china=china+'1';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[1]){
+                                if ((tssl[i]=='1') && (tssr[i]=='1')){
+                                    china=china+'1';
+                                } else {
+                                    china=china+'0';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[2]){
+                                if ((tssl[i]=='0') && (tssr[i]=='0')){
+                                    china=china+'0';
+                                } else {
+                                    china=china+'1';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[4]){
+                                if ((tssl[i]=='1') && (tssr[i]=='0')){
+                                    china=china+'0';
+                                } else {
+                                    china=china+'1';
+                                };
+                            } else if ($(tss[i]+' div.operta').text()==ops[3]){
+                                if (((tssl[i]=='0') && (tssr[i]=='0'))||((tssl[i]=='1') && (tssr[i]=='1'))){
+                                    china=china+'1';
+                                } else {
+                                    china=china+'0';
+                                };
+                            };
+                        };
+                        sevalvaled=tssl[0]+tssl[1]+tssl[2]+tssl[3];
+                        $('div.bler, div.blockerpp, div.bval, div.ender').hide();
+                        $('div.leftpr').removeClass('highlight').css('background-image','url(lrpps/lpp'+arrcolorlog[s1]+'.png)');
+                        $('div.rightpr').removeClass('highlight-r').css('background-image','url(lrpps/rpp'+arrcolorlog[s1]+'.png)');
+                        if ((sevalvaled==de1s) && (china==de3s)){    
+                            dolvl(lcc_stat,nr_stat,tm_stat,kc_stat,berd_stat,1);
+                        } else {
+                            showmenu();
+                        };
+                    });
+                    $('div.gtmblr').unbind('click').bind('click',function(){
+                        $('div.gtmblr').unbind('click');
+                        $('div.leftpr').removeClass('highlight').css('background-image','url(lrpps/lpp'+arrcolorlog[s1]+'.png)');
+                        $('div.rightpr').removeClass('highlight-r').css('background-image','url(lrpps/rpp'+arrcolorlog[s1]+'.png)');
+                        $('div.bval, div.bler, div.ender, div.blockerpp').hide();
+                        showmenu();
+                    });
+                };
+                function getcc(){
+                    $("div.DPlogo").hide();
+                    $('#sl').show();
+                    var ccc1=Math.round(Math.random( )*255);
+                    var ccc2=Math.round(Math.random( )*255);
+                    var ccc3=Math.round(Math.random( )*255);
+                    $('input#valper, input#bigvalh').show();
+                    $('.gencol').show().css('background-color','rgb('+ccc1+','+ccc2+','+ccc3+')');
+                    $('.redccc, .reder_loader').css('top',(DPLH*5).toString()+'px');
+                    $('.reder, .greener, .blueer').show();
+                    $('.greenccc, .greener_loader').css('top',(DPLH*7.5-
+                    (parseInt($("input.answercc").css('height').substr(0,$("input.answercc").css('height').length-2)))/2).toString()+'px');
+                    $("div.greener_loader, div.reder_loader, div.blueer_loader").show()
+                        .css('height',(parseInt($("div.contcc").css('height').substr(0,$("div.contcc").css('height').length-2))).toString()+'px')
+                        .css('width',(parseInt($("div.contcc").css('width').substr(0,$("div.contcc").css('width').length-2))).toString()+'px');
+                    
+                    $('div.blueccc').css('top',(DPLH*10-
+                    (parseInt($("input.answercc").css('height').substr(0,$("input.answercc").css('height').length-2)))).toString()+'px');
+                    $('.ccer').show().css('top',(DPLH*11).toString()+'px');
+                    $("div.reder_loader, div.greener_loader, div.blueer_loader").css('width',"1px").animate({
+                            "width":(parseInt($("div.contcc").css('width').substr(0,$("div.contcc").css('width').length-2))).toString()+'px'
+                    },60000, function(){
+                        checking();
+                    });
+                    console.log('question: ',ccc1,' ',ccc2,' ',ccc3);
+                    $('.gtmcc').unbind('click');
+                    $('.gtmcc').bind('click', function(){
+                        $("html").css('overflow-y','hidden').css('overflow-x','hidden');
+                        $("div.DPlogo").animate({
+                            "margin-left":(DPLW*15).toString(),
+                        }, 1, function(){
+                            $('div.reder_loader, div.greener_loader, div.blueer_loader').stop();
+                            $("div.DPlogo span.red").html('Dexubize');
+                            $("div.DPlogo span.blue").html('Polar');
+                            $('#sl, input#valper, input#bigvalh, .gencol, .reder, .greener, .blueer, div.greener_loader, div.reder_loader, div.blueer_loader, .ccer').hide();
+                            showmenu();
+                        });
+                    });
+                    $('.gotocheck').bind('click',function(){
+                        checking();       
+                    });
+                    function checking(){
+                         $('.gotocheck').unbind('click');
+                            var ced=
+                            Math.pow(Math.pow(ccc1-parseInt($('.reder').val()),2)+Math.pow(ccc2-parseInt($('.greener').val()),2)+
+                            Math.pow(ccc3-parseInt($('.blueer').val()),2),0.5);
+                            if (ced<=parseInt($('#valper').val())){
+                                $('div.reder_loader, div.greener_loader, div.blueer_loader').stop();
+                                $('.reder, .greener, .blueer').val('');
+                                $('#sl, input#valper, input#bigvalh, .gencol, .reder, .greener, .blueer, div.greener_loader, div.reder_loader, div.blueer_loader, .ccer').hide();
+                                var s=$('#bigvalh').val();
+                                var beg=$('#bigvalh').val().indexOf('p')+3;
+                                var end=$('#bigvalh').val().indexOf('s');
+                                plvs=parseInt(s.substr(beg,end-beg));
+                                plvss=parseInt(s.substr(1,end-2));
+                                var numeric = plvs+plvss*127+kprev;
+                                var lifes = Math.floor(numeric/127);
+                                kprev = numeric - lifes*127;
+                                dolvl(lcc_stat,nr_stat,tm_stat,kc_stat,berd_stat,lifes);
+                            } else {
+                                $('.reder, .greener, .blueer').val('');
+                                console.log('lose');
+                                $("html").css('overflow-y','hidden').css('overflow-x','hidden');
+                                $("div.DPlogo").animate({
+                                    "margin-left":(DPLW*15).toString(),
+                                }, 1, function(){
+                                    $('div.reder_loader, div.greener_loader, div.blueer_loader').stop();
+                                    $("div.DPlogo span.red").html('Dexubize');
+                                    $("div.DPlogo span.blue").html('Polar');
+                                    $('#sl, input#valper, input#bigvalh, .gencol, .reder, .greener, .blueer, div.greener_loader, div.reder_loader, div.blueer_loader, .ccer').hide();
+                                    showmenu();
+                                });
+                            };
+                    };
+                };
+        		function showmenu(){
+                    $("div.DPlogo").show();
+	    			$("html").css('overflow-y','hidden').css('overflow-x','hidden');
+	        		$("div.DPlogo").animate({
+					   	"margin":'0',
+					}, 1000, function(){
+					  $("html").css('overflow-x','visible').css('overflow-y','visible');
+					});
+	        		$("div.IMlogo").show().animate({
+					 	"margin-left":((DPLW*15-DPLH*6)/2).toString()+'px',
+					}, 1000);
+					$("div.Ssal").show().animate({
+					    	"margin-top":'0px',
+					}, 1000);
+        		};
+        		function generatecolor(){
+				 	var mysl1 = new slider('sl', DPLW*8, 1, 127, 0, DPLH/2,DPLW*3.5,'valper','bigvalh');
+                    $('#sl').css('left',DPLW*3.5+'px').css('top',DPLH*3+'px').hide();
+                    s1=Math.round(Math.random( )*4);
+				 	s2=Math.round(Math.random( )*4);
+				 	while (s1==s2){
+				 		s2=Math.round(Math.random( )*4);
+				 	};
+                    $('div.knob, div.operta').css('background-color',arrcolordef[s2]);
+                    $('div.slider').css('background-color',arrcolordef[s1]);
+				 	$("div.ready, div.lvls, div.sact").css('background-color',arrcolordef[s2]).mouseover(function() {
+   					    $(this).css("background-color",arrcolordef[s1]);
+					}).mouseout(function() {
+    				    $(this).css("background-color",arrcolordef[s2]);
+					});
+					$("div.Ssal span").css('color',arrcolordef[s2]).mouseover(function() {
+   					    $(this).css("color",arrcolordef[s1]);
+					}).mouseout(function() {
+    				    $(this).css("color",arrcolordef[s2]);
+					});
+					$('.red, .counter_ps, .biginfo, #valper, #bigvalh, div.bval').css('color',arrcolordef[s2]);
+				 	$('.blue, .smallinfo').css('color',arrcolordef[s1]);
+				 	$('div.imp1').css('background-image','url(llrs/ll'+arrcolorlog[s1]+'.png)');
+				 	$('div.imp2').css('background-image','url(llrs/lr'+arrcolorlog[s2]+'.png)');
+				 	$("div.loader, div.reder_loader, div.greener_loader, div.blueer_loader").css("background-color",arrcolordefload[s2]);
+				 	$('input.answer, input.answercc').css("border-color",arrcolordef[s2]).css("color",arrcolordef[s2]);
+                    $('div.hp').css('background-image','url(lfps/lfp'+arrcolorlog[s2]+'.png)');
+                    $('div.leftpr').css('background-image','url(lrpps/lpp'+arrcolorlog[s1]+'.png)');
+                    $('div.rightpr').css('background-image','url(lrpps/rpp'+arrcolorlog[s1]+'.png)');
+        		};
+        		function hideresult(donext){
+        			$('html').css('overflow-x','hidden');
+        			$("div.DPlogo").animate({
+				    		"margin-left":(DPLW*15).toString()+'px',
+				 	}, 1000, function(){
+				 		$("div.DPlogo span.red").html('Dexubize');
+                        $("div.DPlogo span.blue").html('Polar');
+				 		$('.pro, .quest-ans').remove();
+        				$('.onend').hide();
+        				if (donext==1) {showmenu()} else
+                        if (donext==3) {getcc();} else
+                        if (donext==4) {getbb();};
+				 	});
+        		};
+        		function startwin(nr,lcc,tm,kc){
+                    var i=0;
+                    $('div.counter_ps').hide();
+        			$('.sact').show();
+                    $('.gotomenuhome').hide();
+        			$('div.hps').hide().html('');
+        			$('html').css('overflow-x','hidden');
+                    $('div.DPlogo span.red').html('Уровень');
+                    $('div.DPlogo span.blue').html('пройден');
+        			$('div.DPlogo').show().animate({
+				    	'margin-left':'0',
+				  	}, 1000, function(){
+				  		$('html').css('overflow-x','visible');
+				  	});
+				  	for (i=0; i<quests.length; i++){
+				  		$('body').append(quests[i]);
+				  		$('div.pro:last-child').css('top',DPLH*(i*2+6).toString()+'px').css('left',((DPLW*15-DPLH*2*nr)/2).toString()+'px');
+				  		$('body').append('<div class="quest-ans"><span class="red">'+questsnum[i]+'</span>   <span class="blue">'+answnum[i]+'</span></div>');
+				  		$('div.quest-ans:last-child').css('top',DPLH*(i*2+7).toString()+'px');
+				  	};
+				  	$('.red').css('color',arrcolordef[s2]);
+                    $('.blue').css('color',arrcolordef[s1]);
+                    $('div.quest-ans').css('font-size',(DPLH/2).toString()+'px').css('width',(DPLW*15).toString()+'px');
+				  	$('div.pblue,div.pgreen,div.porange,div.pred,div.pviolet').css('height',DPLH.toString()+'px').css('width',(DPLH*2).toString()+'px');
+				 	$("div.winer").css('top',DPLH*(i*2+7).toString()+'px').show();
+				 	$('.gotomenu').bind('click', function(){
+        				$('.gotomenu').unbind('click');
+                        hideresult(1);
+        			});
+                    $('.gotorep').bind('click', function(){
+                        $('.gotorep').unbind('click');
+                        hideresult(2);
+                        dolvl(lcc_stat,nr_stat,tm_stat,kc_stat,1,ls_stat);
+                    });
+        		};
+                function startlost(nr,lcc,tm,kc){
+                    var i=0;
+                    $('div.counter_ps').hide();
+                    $('.sact').show();
+                    $('.gotomenuhome').hide();
+                    $('div.hps').hide().html('');
+                    $('html').css('overflow-x','hidden');
+                    $('div.DPlogo span.red').html('Уровень');
+                    $('div.DPlogo span.blue').html('не пройден');
+                    $('div.DPlogo').show().animate({
+                        'margin-left':'0',
+                    }, 1000, function(){
+                        $('html').css('overflow-x','visible');
+                    });
+                    for (i=0; i<quests.length; i++){
+                        $('body').append(quests[i]);
+                        $('div.pro:last-child').css('top',DPLH*(i*2+6).toString()+'px').css('left',((DPLW*15-DPLH*2*nr)/2).toString()+'px');
+                        $('body').append('<div class="quest-ans"><span class="red">'+questsnum[i]+'</span>   <span class="blue">'+answnum[i]+'</span></div>');
+                        $('div.quest-ans:last-child').css('top',DPLH*(i*2+7).toString()+'px');
+                    };
+
+                    $('div.quest-ans').css('font-size',(DPLH/2).toString()+'px').css('width',(DPLW*15).toString()+'px');
+                    $('div.pblue,div.pgreen,div.porange,div.pred,div.pviolet').css('height',DPLH.toString()+'px').css('width',(DPLH*2).toString()+'px');
+                    $('.red').css('color',arrcolordef[s2]);
+                    $('.blue').css('color',arrcolordef[s1]);
+                    $("div.loser").css('top',DPLH*(i*2+7).toString()+'px');
+                    $("div.loser").show();
+                    $('.gotomenu').unbind('click');
+                    $('.gotomenu').bind('click', function(){
+                        $('.gotomenu').unbind('click');
+                        hideresult(1);
+                    });
+                    $('.gotrep').unbind('click');
+                    $('.gotorep').bind('click', function(){
+                        $('.gotorep').unbind('click');
+                        hideresult(2);
+                        dolvl(lcc_stat,nr_stat,tm_stat,kc_stat,1,ls_stat);
+                    });
+                    $('.gotocc').unbind('click');
+                    $('.gotocc').bind('click', function(){
+                        $('.gotocc').unbind('click');
+                        hideresult(3);
+                    });
+                    $('.gotobb').unbind('click');
+                    $('.gotobb').bind('click', function(){
+                        $('.gotobb').unbind('click');
+                        hideresult(4);
+                    });
+                };
+        		function startlevel(ind,lcc,nr,tm,kc,lifes){
+        			$('input.answer').val('');
+        			var i;
+        			var sl=Math.round(Math.random());
+        			var s='';
+        			var k=0;
+                    var sum=0;
+        			for (i = 0; i < nr; i++){
+        				if (i>0) {sl=Math.round(Math.random());} else {sl=1};
+        				if (sl==1){
+        					$('div.ps').append('<div class="p'+arrcolorlog[s2]+'"></div>');
+        					k++;
+                            sum=sum+Math.pow(2,nr-i-1);
+        				} else {
+        					$('div.ps').append('<div class="p'+arrcolorlog[s1]+'"></div>');
+        				};
+        			};
+                    s=sum.toString();
+        			quests[quests.length]='<div class="pro">'+$('div.ps').html()+'</div>';
+        			questsnum[questsnum.length]=s;
+        			$('div.pblue,div.pgreen,div.porange,div.pred,div.pviolet').css('height',DPLH.toString()+'px').css('width',(DPLH*2).toString()+'px');
+        			$("div.ps").css("left",((DPLW*15-DPLH*2*nr)/2).toString()+'px').css("top",DPLH.toString()*4+'px');
+        			$("input.answer").show();
+        			$("div.loader, div.ready").show();
+        			$("div.loader").css('width',"1px").animate({
+        					"width":(DPLH/2*15+4).toString()+"px"
+        			},(k+1)*tm*1000, function(){
+                        checking();
+        			});
+        			$("div.ready").bind("click",function(){
+                        checking();
+        			});
+                    function checking(){
+                        $("div.ready").unbind('click');
+                        var value=$('input.answer').val();
+                        answnum[answnum.length]=value;
+                        $("div.ps").html('');
+                        $("input.answer, div.ready").hide();
+                        ind++;
+                        berd_stat++;
+                        //console.log('сейчас ',lifes,' здоровья');
+                        $('div.counter_ps').html(ind.toString()+'/'+kc.toString());
+                        $("div.ready").unbind('click');
+                        $("div.loader").hide().stop();
+                        if (value==s){
+                            //console.log('correct');
+                            if (ind<=kc){
+                                startlevel(ind,lcc,nr,tm,kc,lifes);
+                            } else {
+                                startwin(nr,lcc,tm,kc);
+                            };
+                        } else {
+                            if (lifes>0){
+                                lifes--;
+                                //console.log('осталось ',lifes,' здоровья');
+                                $("div.hp:last-child").remove();
+                                if (ind<=kc){
+                                    startlevel(ind,lcc,nr,tm,kc,lifes);
+                                } else {
+                                    startwin(nr,lcc,tm,kc);
+                                };
+                            } else {
+                                startlost(nr,lcc,tm,kc);
+                            };
+                        };
+                    };
+        		};
+                var lcc_stat=0;
+                var nr_stat=0;
+                var tm_stat=0;
+                var kc_stat=0;
+                var berd_stat=0;
+                var ls_stat=0;
+        		function dolvl(lcc,nr,tm,kc,berd,ls){
+        			
+                    if (berd==1){
+                        quests = [];
+                        questsnum = [];
+                        answnum = [];
+                    };
+                    lcc_stat=lcc;
+                    nr_stat=nr;
+                    tm_stat=tm;
+                    kc_stat=kc;
+                    berd_stat=berd;
+                    ls_stat=ls;
+        			var i=0;
+        			var lifes=0;
+                    $("div.hps").html('').show();
+        			for (i = 0; i < ls; i++){
+        				$('div.hps').append('<div class="hp"></div>');
+                        $('div.hp').css('background-image','url(lfps/lfp'+arrcolorlog[s2]+'.png)');
+        				lifes++;
+        			};
+        			$('div.hp').css('width',(DPLH/2).toString()+'px').css('height',(DPLH/2).toString()+'px');
+        			jQuery("html").css('overflow-x','hidden');
+        			$("div.DPlogo").animate({
+				    		"margin-left":(DPLW*15).toString()+'px',
+				 	}, 1000, function(){
+				 		$("div.DPlogo").hide();
+				 		jQuery("html").css('overflow-x','visible');
+				 		$('div.counter_ps').html(berd.toString()+'/'+kc.toString()).show();
+				 		//$("div.ready:hover").css('background-color',arrcolordef[s1]);
+				 		startlevel(berd,lcc,nr,tm,kc,lifes);
+				 	});
+        		};
+        		$(".contlvls").hide();
+        		$("div.DPlogo").css("font-size",DPLH.toString()+'px').css("width",(DPLW*15).toString()+'px').css("padding-top",DPLH.toString()*4+'px');
+        		$("div.IMlogo").css("width",DPLH.toString()*6+'px').css("height",DPLH.toString()*5+'px');
+        		$("div.imp1, div.imp2").css("width",DPLH.toString()*5/2+'px').css("height",DPLH.toString()*5+'px');
+        		$("div.imp1").css("margin-right",DPLH.toString()+'px');
+                $("div.Ssal span").css("font-size",DPLH.toString()/2+'px')
+                $("div.gotoplay span").on("click",function(){
+                    //$("div.gotoplay span").unbind('click');
+    				$("html").css('overflow-y','hidden').css('overflow-x','hidden');
+                    //$("html").css('-webkit-transform','translateZ(0px)');
+        			$("div.DPlogo").animate({
+				    	"margin-left":(DPLW*15).toString(),
+				  	}, 1000, function(){
+				  		$("div.DPlogo span.red").html('Выбор');
+                        $("div.DPlogo span.blue").html('уровня');
+				  		$("div.Ssal").hide();
+				  		$("html").css('overflow-y','visible');
+				  		$("div.DPlogo").animate({
+				    		"margin-left":"0",
+				  		}, 1000, function(){
+				  			$("html").css('overflow-x','visible');
+				  			$(".contlvls").show(500);
+                            $('.gotomenuhome').show(500).bind('click',function(){
+                                    $('.gotomenuhome').unbind('click');
+                                    $(".gotomenuhome").hide(500);
+                                    $('.contlvls').hide(500);
+                                    $('html').css('overflow-x','hidden');
+                                    $("div.DPlogo").animate({
+                                        "margin-left":(DPLW*15).toString()+'px',
+                                    }, 1000, function(){
+                                        $("div.DPlogo span.red").html('Dexubize');
+                                        $("div.DPlogo span.blue").html('Polar');
+                                        showmenu();
+                                    });
+                            });
+				  		});
+				  	});
+				  	$("div.IMlogo").animate({
+				    	"margin-left":"-"+(DPLW*15).toString(),
+				  	}, 1000);
+				  	$("div.Ssal").animate({
+				    	"margin-top":(DPLH*15).toString(),
+				  	}, 1000);
+        		});
+
+                $('.gotomenuhome').css('margin-left',(DPLW*15-DPLH*4).toString()/2+'px').css('top',(DPLH*11).toString()+'px').hide();
+                $('.biginfo, .smallinfo').css('padding','0 '+DPLH.toString()+'px').css('font-size',(DPLH/3).toString()+'px')
+                .css('top',DPLH.toString()*6+'px').hide();
+                $('.smallinfo').css('top',(DPLH*10).toString()+'px').css('padding','0');
+                $("div.smallinfo").css('margin-left',
+                    ((DPLW*15-parseInt($("div.smallinfo").css('width').substr(0,$("input.answer").css('width').length-2)))/2).toString()+'px');
+                
+                //Что это?
+                $("div.whatisit span").bind("click",function(){
+                    //$("div.whatisit span").unbind
+                    $("html").css('overflow-y','hidden').css('overflow-x','hidden');
+                    $("div.DPlogo").animate({
+                        "margin-left":(DPLW*15).toString(),
+                    }, 1000, function(){
+                        $("div.DPlogo span.red").html('О');
+                        $("div.DPlogo span.blue").html('сервисе');
+                        $("div.Ssal").hide();
+                        $("html").css('overflow-y','visible');
+                        $("div.DPlogo").animate({
+                            "margin-left":"0",
+                        }, 1000, function(){
+                            $("html").css('overflow-x','visible');
+                            $(".gotomenuhome").show(500);
+                            $('.biginfo,.smallinfo').show(500);
+                            $('.gotomenuhome').unbind('click');
+                            $('.gotomenuhome').bind('click',function(){
+                                    $('.gotomenuhome').unbind('click');
+                                    $(".gotomenuhome").hide(500);
+                                    $('.biginfo,.smallinfo').hide(500);
+                                    $('html').css('overflow-x','hidden');
+                                    $("div.DPlogo").animate({
+                                        "margin-left":(DPLW*15).toString()+'px',
+                                    }, 1000, function(){
+                                        $("div.DPlogo span.red").html('Dexubize');
+                                        $("div.DPlogo span.blue").html('Polar');
+                                        showmenu();
+                                    });
+                             });
+                        });
+                    });
+                    $("div.IMlogo").animate({
+                        "margin-left":"-"+(DPLW*15).toString(),
+                    }, 1000);
+                    $("div.Ssal").animate({
+                        "margin-top":(DPLH*15).toString(),
+                    }, 1000);
+                });
+        		
+				$("div.ready, div.sact").css("height",DPLH.toString() - DPLH.toString()/4+'px')
+                .css("font-size",DPLH.toString()/2+'px').css("padding-top",DPLH.toString()/4+'px');
+				$("div.sact").css("width",DPLH.toString()*4+'px').css("margin-right",DPLH.toString()/4+'px');
+                $("div.ready").css("width",DPLH.toString()*2+'px').css("left",((DPLW*15-DPLH.toString()*2)/2).toString()+"px")
+                .css("top",DPLH.toString()*6+'px');
+				$("div.winer").css("left",(DPLW*15-parseInt($("div.winer")
+                    .css('width').substr(0,$("div.winer").css('width').length-2))).toString()/2+'px');
+                $("div.ccer, div.bler").css("left",(DPLW*15-parseInt($("div.ccer")
+                    .css('width').substr(0,$("div.ccer").css('width').length-2))).toString()/2+'px');
+                $("div.loser").css("left",(DPLW*15-parseInt($("div.loser")
+                    .css('width').substr(0,$("div.loser").css('width').length-2))).toString()/2+'px');
+				$("div.loser, div.winer, div.ccer").hide();
+				$("div.contlvls").css("width",DPLH.toString()*15+'px').css("left",herty.toString()+'px')
+                .css("top",((DPLH*15-3*DPLH/4)/2).toString()+'px');
+                $("div.lvls").css("height",DPLH.toString() - DPLH.toString()/4+'px').css("width",DPLH.toString()+'px')
+                .css("font-size",DPLH.toString()/2+'px').css("padding-top",DPLH.toString()/4+'px').css("margin-right",DPLH.toString()/2+'px')
+                .bind("click",function(){
+                    $(".gotomenuhome").hide(500);
+                    $(".contlvls").hide(500);
+					if (parseInt($(this).attr("class").substring(6))==1){
+						dolvl(1,4,3,3,1,2)
+					} else if (parseInt($(this).attr("class").substring(6))==2){
+                        dolvl(1,5,4,5,1,3)
+                    } else if (parseInt($(this).attr("class").substring(6))==3){
+                        dolvl(1,6,4,7,1,3)
+                    } else if (parseInt($(this).attr("class").substring(6))==4){
+                        dolvl(1,6,3,11,1,2)
+                    } else if (parseInt($(this).attr("class").substring(6))==5){
+                        dolvl(1,7,4,13,1,3)
+                    } else if (parseInt($(this).attr("class").substring(6))==6){
+                        dolvl(1,7,3,17,1,2)
+                    } else if (parseInt($(this).attr("class").substring(6))==7){
+                        dolvl(1,8,5,19,1,4)
+                    } else if (parseInt($(this).attr("class").substring(6))==8){
+                        dolvl(1,8,4,23,1,3)
+                    } else if (parseInt($(this).attr("class").substring(6))==9){
+                        dolvl(1,9,6,25,1,5)
+                    } else if (parseInt($(this).attr("class").substring(6))==10){
+                        dolvl(1,9,6,30,1,5)
+                    };
+				});
+                $("div.gencol").css("height",DPLH.toString()*5+'px').css("width",DPLH.toString()*5+'px')
+                .css("top",DPLH.toString()*5+'px').css("left",((DPLW*15-DPLH*5)/4).toString()+'px').hide();
+                $('.reder, .blueer, .greener').hide();
+                //getcc();
+                var faear=false; var faeal=false;
+                //var mysl2 = new slider('sl2', 400, 100, 200, 0);
+
+                ///////////////////////////
+                ////getbb block////////////
+                //////////////////////////
+
+
+                $('div.leftpr').css('width',DPLH*3+'px').css('height',DPLH*2+'px').css('float','left');
+                $('div.aeopsr').css('width',DPLH*3+'px').css('height',DPLH*2+'px').css('float','left');
+                $("div.leftpr").click(function () {
+                    $(this).toggleClass("highlight");
+                    
+                    if ($(this).attr('class')=='leftpr aeopsl highlight'){
+                        $(this).css('background-image','url(lrpps/lpp'+arrcolorlog[s2]+'.png)');
+                    } else {
+                        $(this).css('background-image','url(lrpps/lpp'+arrcolorlog[s1]+'.png)');
+                    };
+                });
+                $("div.rightpr").click(function () {
+                    $(this).toggleClass("highlight-r");
+                    if ($(this).attr('class')=='rightpr aeopsr highlight-r'){
+                        $(this).css('background-image','url(lrpps/rpp'+arrcolorlog[s2]+'.png)');
+                    } else {
+                        $(this).css('background-image','url(lrpps/rpp'+arrcolorlog[s1]+'.png)');
+                    };
+                });
+                $('div.operta').css('width',DPLH+'px').css('height',DPLH+'px').css('float','left').css('margin-left',DPLH/2+'px')
+                .css('margin-right',DPLH/2+'px').css('color','white').css('font-size',DPLH+'px').css('text-align','center').css('padding',DPLH/2+'px');
+                $('div.blockerpp').css('left',(DPLW*15-DPLH*9)/2+'px').hide();
+                $('div.blockerpp').css('top',DPLH*3+'px');
+
+                $('div.blockerpp.second').css('top',DPLH*5.5+'px');
+                $('div.blockerpp.third').css('top',DPLH*8+'px');
+                $('div.blockerpp.fourth').css('top',DPLH*10.5+'px');
+                $('div.bler').css('top',DPLH*13+'px').hide();
+        	});
+    	</script>
+	</head>
+	<body>
+        <div class='bval'></div>
+        <div class='bval ender'></div>
+        <div class='blockerpp first'>
+            <div class='leftpr aeopsl'></div>
+            <div class='operta'>⊕</div>
+            <div class='rightpr aeopsr'></div>
+        </div>
+        <div class='blockerpp second'>
+            <div class='leftpr aeopsl'></div>
+            <div class='operta'>&</div>
+            <div class='rightpr aeopsr'></div>
+        </div>
+        <div class='blockerpp third'>
+            <div class='leftpr aeopsl'></div>
+            <div class='operta'>|</div>
+            <div class='rightpr aeopsr'></div>
+        </div>
+        <div class='blockerpp fourth'>
+            <div class='leftpr aeopsl'></div>
+            <div class='operta'>≡</div>
+            <div class='rightpr aeopsr'></div>
+        </div>
+        <input id='valper' type='text' border='1px' disabled></div>
+        <input id='bigvalh' type='text' border='1px' disabled></div>
+        <div id="sl"></div>
+        <div id="sl2"></div>
+        <div class='reder_loader'></div>
+        <div class='greener_loader'></div>
+        <div class='blueer_loader'></div>
+        <div class='contcc redccc'><input class='answercc reder' type="text" border="1"></div>
+        <div class='contcc greenccc'><input class='answercc greener' type="text" border="1"></div>
+        <div class='contcc blueccc'><input class='answercc blueer' type="text" border="1"></div>
+        <div class='gencol'></div>
+        <div class='biginfo'>Dexubize Polar - сервис, который поможет проверить ваши знания двоичной системы счисления, в том числе перевод чисел, двоичную арифметику и некоторые другие задачи. Уровни предполагают запись числа в десятичной системе счисления, представленное в задании в виде двоичного кода с помощью двух цветов.
+        </div>
+        <div class='smallinfo'>
+        Copyright 2014 - 2022 All rights are reserved
+        </div>
+        <div class='sact gotomenuhome'>Main page</div>
+        <div class='onend loser'>
+            <div class='sact gotomenu'>Main page</div>
+            <div class='sact gotorep'>Repeat</div>
+            <div class='sact gotocc'>Cchallenge</div>
+            <div class='sact gotobb'>BBooster</div>
+        </div>
+		<div class='onend winer'>
+			<div class='sact gotomenu'>Main page</div>
+			<div class='sact gotorep'>Repeat</div>
+		</div>
+        <div class='onend ccer'>
+            <div class='sact gotomenu gtmcc'>Main page</div>
+            <div class='sact gotocheck'>OK</div>
+        </div>
+        <div class='onend bler'>
+            <div class='sact gotomenu gtmblr'>Main page</div>
+            <div class='sact gblr'>OK</div>
+        </div>
+		<div class='hps'></div>
+		<div class='loader'></div>
+		<input class='answer' type="text" border="1">
+		<div class='ready'>OK</div>
+		<div class='ps'></div>
+		<div class='counter_ps'>1/15</div>
+		<div class='contlvls'>
+			<div class="lvls n1">1</div>
+			<div class="lvls n2">2</div>
+			<div class="lvls n3">3</div>
+			<div class="lvls n4">4</div>
+			<div class="lvls n5">5</div>
+			<div class="lvls n6">6</div>
+			<div class="lvls n7">7</div>
+			<div class="lvls n8">8</div>
+			<div class="lvls n9">9</div>
+			<div class="lvls n10">10</div>
+		</div>
+		<div class="DPlogo"><span class="red">Dexubize</span> <span class="blue">Polar</span></div>
+		<div class="IMlogo">
+			<div class='imp1'></div>
+			<div class='imp2'></div>
+		</div>
+		<div class="Ssal gotoplay"><span>Play</span></div>
+		<div class="Ssal whatisit"><span>What is it?</span></div>
+	</body>
+</html>

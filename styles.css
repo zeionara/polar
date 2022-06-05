@@ -1,0 +1,118 @@
+html,body{ 
+	margin:0; padding:0; background-image: url('backg.png'); background-repeat:repeat;
+}
+.DPlogo{
+	color:#FD0000; font:30pt sans-serif; text-align:center; padding-top:20%; cursor:default;
+}
+.red{
+	color:#FD0000;
+}
+.blue{
+	color:#0194FE; 
+}
+.IMlogo{
+	width:200px; height:200px; margin:0 auto; background-size: cover;
+}
+.Ssal, .Ssal span{
+	color:#FD0000; font:10pt sans-serif; text-align:center; cursor:default; text-decoration: none;
+}
+.Ssal span:hover{
+	color:#0194FE;
+}
+.lvls{
+	width:200px; height:200px; background-color:#0194FE; text-align:center; color:white; cursor:default; float: left; position:relative;
+}
+.contlvls{
+	margin: 0 auto; width: 900px; position:absolute;
+}
+.lvls:hover{
+	background-color:#FD0000;
+}
+.counter_ps{
+	color:#AAA; font:10pt sans-serif; text-align:center; cursor:default; position: absolute; right:10px; top:10px;
+}
+.pblue{
+	background-image: url('ps/pblue.png'); background-size: cover; float:left;
+}
+.pgreen{
+	background-image: url('ps/pgreen.png'); background-size: cover; float:left;
+}
+.pred{
+	background-image: url('ps/pred.png'); background-size: cover; float:left;
+}
+.porange{
+	background-image: url('ps/porange.png'); background-size: cover; float:left;
+}
+.pviolet{
+	background-image: url('ps/pviolet.png'); background-size: cover; float:left;
+}
+.ps{
+	position: absolute;
+}
+.answer,.answercc,#valper, #bigvalh{
+	width:300px; position:absolute; border-color:#0194FE; color:#0194FE; font-size:30px; background-color: transparent; 
+}
+.answercc{
+	position:relative;
+}
+.ready{
+	width:200px; height:200px; background-color:#FD0000; text-align:center; color:white; position:absolute; cursor:default; font:10pt sans-serif;
+}
+.sact{
+	width:400px; height:200px; background-color:#FD0000; text-align:center; color:white; position:relative; cursor:default; float:left; font:10pt sans-serif;
+}
+.loader, .greener_loader, .reder_loader, .blueer_loader{
+	background-color:#0194FE; position:absolute; 
+}
+.hps{
+	position:absolute;
+}
+.hp{
+	background-image: url('hp.png'); background-size:cover; position:relative; float:left;
+}
+.pro{
+	position:absolute;
+}
+.quest-ans{
+	position:absolute; text-align:center;
+}
+.onend{
+	position:absolute;
+}
+.imp1, .imp2{
+	position:relative; float:left; background-size:cover;
+}
+.biginfo, .smallinfo{
+	font:30pt sans-serif; text-align:justify; padding:50px; position:absolute;
+}
+.smallinfo{
+	text-align:center;
+}
+.gencol{
+	background-color:red; position:absolute;
+}
+.slider {
+	background-color:#ff0000;
+}
+.knob {
+	position: relative;
+	background-color:#0000ff;
+}
+#sl{
+	position:absolute; top:50px;
+}
+#valper, #bigvalh{
+	text-align:center; border:none;
+}
+.contcc{
+	position:absolute;
+}
+.blockerpp{
+	position:absolute;
+}
+.leftpr, .rightpr{
+	background-size:cover;
+}
+.bval{
+	font-family:sans-serif; position:absolute;
+}
